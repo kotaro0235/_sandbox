@@ -6,6 +6,16 @@ public class Game {
 	
 	public int[][]board = new int[8][8];
 	public boolean isEnd = false;
+	public int BOARD_SIZE_X_TO = 7;
+	public int BOARD_SIZE_Y_TO = 7;
+	public int BOARD_SIZE_X_FROM = 0;
+	public int BOARD_SIZE_Y_FROM = 0;
+	
+	public enum AddSt {
+		Xadd,
+		Yadd,
+		XandYadd;
+	}
 	
 	public boolean run() {
 		board = init();
@@ -137,7 +147,12 @@ public class Game {
 	}
 	
 	public boolean canSet(int setX, int setY, Status zibun, Status aite) {
-			
+		
+		if (setX<0 || setY<0 || setX>7 || setY>7) {
+			return false;
+		}
+		
+		
 		if (setX>7 && setY>7 ) {
 			return false;
 		}
@@ -156,176 +171,106 @@ public class Game {
 	}
 	
 	public boolean canSetByRule(int setX, int setY, Status zibun, Status aite) {
-		int tarX = setX;
-		int tarY = setY;
-		boolean canAiteKomaReversi = false;
 		
 		//tate
-		tarX = setX + 1;
-		while(tarX < 7) {
-			if (board[tarX][setY] == aite.getStatusCode()) {
-				if (tarX == setX+1) {
-					canAiteKomaReversi = true;
-				}
-			} else if (board[tarX][setY] == zibun.getStatusCode() && canAiteKomaReversi) {
-				return true;
-			}
-			tarX++;
+		if (canSetMatrix(setX,setY,zibun,aite,"+","")) {
+			return true;
 		}
-		canAiteKomaReversi = false;
-		tarX = setX - 1 ;
-		while (tarX > 0) {
-			if (board[tarX][setY] == aite.getStatusCode()) {
-				if (tarX == setX-1) {
-					canAiteKomaReversi = true;
-				}
-			} else if (board[tarX][setY] == zibun.getStatusCode() && canAiteKomaReversi) {
-				return true;
-			}
-			tarX--;
+		if (canSetMatrix(setX,setY,zibun,aite,"-","")) {
+			return true;
 		}
+		
 		//yoko
-		canAiteKomaReversi = false;
-		tarY = setY + 1;
-		while(tarY < 7) {
-			if (board[setX][tarY] == aite.getStatusCode()) {
-				if (tarY == setY+1) {
-					canAiteKomaReversi = true;
-				}
-			} else if (board[setX][tarY] == zibun.getStatusCode() && canAiteKomaReversi) {
-				return true;
-			}
-			tarY++;
+		if (canSetMatrix(setX,setY,zibun,aite,"","+")) {
+			return true;
 		}
-		canAiteKomaReversi = false;
-		tarY = setY - 1;
-		while (tarY > 0) {
-			if (board[setX][tarY] == aite.getStatusCode()) {
-				if (tarY == setY-1) {
-					canAiteKomaReversi = true;
-				}
-			} else if (board[setX][tarY] == zibun.getStatusCode() && canAiteKomaReversi) {
-				return true;
-			}
-			tarY--;
+		if (canSetMatrix(setX,setY,zibun,aite,"","-")) {
+			return true;
 		}
 		
 		//naname
-		canAiteKomaReversi = false;
-		tarY = setY + 1;
-		tarX = setX + 1;
-		while (tarY<7 && tarX<7) {
-			if (board[tarX][tarY] == aite.getStatusCode()) {
-				if (tarX == setX+1 && tarY == setY+1) {
-					canAiteKomaReversi = true;
-				}
-			} else if (board[tarX][tarY] == zibun.getStatusCode() && canAiteKomaReversi) {
-				return true;
-			}
-			tarY++;
-			tarX++;
+		if (canSetMatrix(setX,setY,zibun,aite,"+","+")) {
+			return true;
 		}
-		canAiteKomaReversi = false;
-		tarY = setY - 1;
-		tarX = setX - 1;
-		while (tarY>0 && tarX>0) {
-			if (board[tarX][tarY] == aite.getStatusCode()) {
-				if (tarX == setX-1 && tarY == setY-1) {
-					canAiteKomaReversi = true;
+		if(canSetMatrix(setX,setY,zibun,aite,"-","-")) {
+			return true;
+		}
+		//default
+		return false;
+	}
+	
+	public boolean canSetMatrix(int setX, int setY, Status zibun, Status aite, String addOrDecX, String addOrDecY) {
+
+		boolean maybeCanReversi = false;
+		for (int x = setX ,y = setY; 
+				(("+".equals(addOrDecX) || "+".equals(addOrDecY)) && x<=7 && y<=7) 
+						|| (("-".equals(addOrDecX) || "-".equals(addOrDecY)) && x>=0 && y>=0); 
+				x=addXY(x, addOrDecX), y=addXY(y, addOrDecY)) {
+			
+			int targetSt = board[x][y];
+			if (targetSt == zibun.getStatusCode()) {
+				if (maybeCanReversi) {
+					return true;
+				} else {
+					return false;
 				}
-			} else if (board[tarX][tarY] == zibun.getStatusCode() && canAiteKomaReversi) {
-				return true;
+			} else if (targetSt == aite.getStatusCode()) {
+				maybeCanReversi = true;
 			}
-			tarY--;
-			tarX--;
 		}
 		
 		return false;
+		
+	}
+	
+	private int addXY(int tarInt, String addOrDec) {
+		if ("+".equals(addOrDec)) {
+			return tarInt+1;
+		} else if ("-".equals(addOrDec)) {
+			return tarInt-1;
+		} else {
+			return tarInt;
+		}
 	}
 
 	public void doReversi(int setX, int setY, Status zibun, Status aite) {
-		int tarX = setX;
-		int tarY = setY;
-		boolean isFinishThisLine = false;
 		
-		//tate
-		tarX = setX + 1;
-		while(!isFinishThisLine) {
-			if (board[tarX][setY] == aite.getStatusCode()) {
-				board[tarX][setY] = zibun.getStatusCode();
-			} else if (tarX == 7 || board[tarX][setY] == zibun.getStatusCode()) {
-				isFinishThisLine = true;
-			} else {
-				break;
-			}
-			tarX++;
-		}
-		isFinishThisLine = false;
-		tarX = setX - 1 ;
-		while (!isFinishThisLine) {
-			if (board[tarX][setY] == aite.getStatusCode()) {
-				board[tarX][setY] = zibun.getStatusCode();
-			} else if (tarX == 0 || board[tarX][setY] == zibun.getStatusCode()) {
-				isFinishThisLine = true;
-			} else {
-				break;
-			}
-			tarX--;
-		}
-		//yoko
-		isFinishThisLine = false;
-		tarY = setY + 1;
-		while(!isFinishThisLine) {
-			if (board[setX][tarY] == aite.getStatusCode()) {
-				board[setX][tarY] = zibun.getStatusCode();
-			} else if (tarY == 7 || board[setX][tarY] == zibun.getStatusCode()) {
-				isFinishThisLine = true;
-			} else {
-				break;
-			}
-			tarY++;
-		}
-		isFinishThisLine = false;
-		tarY = setY - 1;
-		while (!isFinishThisLine) {
-			if (board[setX][tarY] == aite.getStatusCode()) {
-				board[setX][tarY] = zibun.getStatusCode();
-			} else if (tarY == 0 || board[setX][tarY] == zibun.getStatusCode()) {
-				isFinishThisLine = true;
-			} else {
-				break;
-			}
-			tarY--;
-		}
+		boolean tateP = canSetMatrix(setX,setY,zibun,aite,"+","");
+		boolean tateM = canSetMatrix(setX,setY,zibun,aite,"-","");
+		boolean yokoP = canSetMatrix(setX,setY,zibun,aite,"","+");
+		boolean yokoM = canSetMatrix(setX,setY,zibun,aite,"","-");
+		boolean nanaP = canSetMatrix(setX,setY,zibun,aite,"+","+");
+		boolean nanaM = canSetMatrix(setX,setY,zibun,aite,"-","-");
 		
-		//naname
-		isFinishThisLine = false;
-		tarY = setY + 1;
-		tarX = setX + 1;
-		while (!isFinishThisLine) {
-			if (board[tarX][tarY] == aite.getStatusCode()) {
-				board[tarX][tarY] = zibun.getStatusCode();
-			} else if (tarY == 7 || tarX == 7 || board[tarX][tarY] == zibun.getStatusCode()) {
-				isFinishThisLine = true;
-			} else {
-				break;
-			}
-			tarY++;
-			tarX++;
+		if (tateP) {
+			execute(setX,setY,zibun,aite,"+","");
 		}
-		isFinishThisLine = false;
-		tarY = setY - 1;
-		tarX = setX - 1;
-		while (!isFinishThisLine) {
-			if (board[tarX][tarY] == aite.getStatusCode()) {
-				board[tarX][tarY] = zibun.getStatusCode();
-			} else if (tarX == 0 || tarY == 0 || board[tarX][tarY] == zibun.getStatusCode()) {
-				isFinishThisLine = true;
-			} else {
-				break;
+		if (tateM) {
+			execute(setX,setY,zibun,aite,"-","");
+		}
+		if (yokoP) {
+			execute(setX,setY,zibun,aite,"","+");
+		}
+		if (yokoM) {
+			execute(setX,setY,zibun,aite,"","-");
+		}
+		if (nanaP) {
+			execute(setX,setY,zibun,aite,"+","+");
+		}
+		if (nanaM) {
+			execute(setX,setY,zibun,aite,"-","-");
+		}
+	}
+	
+	public void execute(int setX, int setY, Status zibun, Status aite, String addOrDecX, String addOrDecY) {
+		board[setX][setY] = zibun.getStatusCode();
+		for (int x = setX ,y = setY; 
+				(("+".equals(addOrDecX) || "+".equals(addOrDecY)) && x<7 && y<7) 
+						|| (("-".equals(addOrDecX) || "-".equals(addOrDecY)) && x>0 && y>0); 
+				x=addXY(x, addOrDecX), y=addXY(y, addOrDecY)) {
+			if (board[x][y] == aite.getStatusCode()) {
+				board[x][y] = zibun.getStatusCode();
 			}
-			tarY--;
-			tarX--;
 		}
 	}
 	
