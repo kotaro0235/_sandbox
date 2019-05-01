@@ -195,6 +195,12 @@ public class Game {
 		if(canSetMatrix(setX,setY,zibun,aite,"-","-")) {
 			return true;
 		}
+		if (canSetMatrix(setX,setY,zibun,aite,"+","-")) {
+			return false;
+		}
+		if (canSetMatrix(setX,setY,zibun,aite,"-","+")) {
+			return false;
+		}
 		//default
 		return false;
 	}
@@ -241,6 +247,8 @@ public class Game {
 		boolean yokoM = canSetMatrix(setX,setY,zibun,aite,"","-");
 		boolean nanaP = canSetMatrix(setX,setY,zibun,aite,"+","+");
 		boolean nanaM = canSetMatrix(setX,setY,zibun,aite,"-","-");
+		boolean nanaPR = canSetMatrix(setX,setY,zibun,aite,"+","-");
+		boolean nanaMR = canSetMatrix(setX,setY,zibun,aite,"-","+");
 		
 		if (tateP) {
 			execute(setX,setY,zibun,aite,"+","");
@@ -259,6 +267,12 @@ public class Game {
 		}
 		if (nanaM) {
 			execute(setX,setY,zibun,aite,"-","-");
+		}
+		if (nanaPR) {
+			execute(setX,setY,zibun,aite,"+","-");
+		}
+		if (nanaMR) {
+			execute(setX,setY,zibun,aite,"-","+");
 		}
 	}
 	
