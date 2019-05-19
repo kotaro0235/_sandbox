@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language javascript?>
+<?import java.lang.*?>
+<?import java.net.URL?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AppController10">
+	<stylesheets>
+		<URL value="@app_10.css"/>
+	</stylesheets>
+	<top>
+		<Label fx:id="label1" text="This is FXML!"/>
+	</top>
+	<center>
+		<VBox>
+			<fx:define>
+				<ToggleGroup fx:id="group1"/>
+			</fx:define>
+			<RadioButton text="Male" toggleGroup="$group1" userData="男である" selected="true"/>
+			<RadioButton text="Female" toggleGroup="$group1" userData="女ですの"/>
+		</VBox>
+	</center>
+	<bottom>
+	</bottom>
+</BorderPane>

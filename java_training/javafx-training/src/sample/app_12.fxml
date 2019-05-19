@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language javascript?>
+<?import java.lang.*?>
+<?import java.net.URL?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AppController12">
+	<stylesheets>
+		<URL value="@app_12.css"/>
+	</stylesheets>
+	<top>
+		<Label fx:id="label1" text="This is FXML!"/>
+	</top>
+	<center>
+		<Slider fx:id="slider1" min="0" max="100"/>
+	</center>
+	<bottom>
+	</bottom>
+</BorderPane>

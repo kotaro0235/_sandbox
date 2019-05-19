@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language javascript?>
+<?import java.lang.*?>
+<?import java.net.URL?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AppController8">
+	<stylesheets>
+		<URL value="@app_8.css"/>
+	</stylesheets>
+	<top>
+		<Label fx:id="label1" text="This is FXML!"/>
+	</top>
+	<center>
+		<TextField fx:id="field1"/>
+	</center>
+	<bottom>
+		<Button fx:id="btn1" text="Click"/>
+	</bottom>
+
+</BorderPane>

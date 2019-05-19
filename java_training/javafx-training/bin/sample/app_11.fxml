@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?language javascript?>
+<?import java.lang.*?>
+<?import java.net.URL?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="sample.AppController11">
+	<stylesheets>
+		<URL value="@app_11.css"/>
+	</stylesheets>
+	<top>
+		<Label fx:id="label1" text="This is FXML!"/>
+	</top>
+	<center>
+		<ComboBox fx:id="combo1">
+		<items>
+			<FXCollections fx:factory="observableArrayList">
+				<String fx:value="One"/>
+				<String fx:value="Two"/>
+				<String fx:value="Three"/>
+			</FXCollections>
+		</items>
+		</ComboBox>
+	</center>
+	<bottom>
+	</bottom>
+</BorderPane>
