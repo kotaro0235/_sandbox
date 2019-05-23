@@ -1,6 +1,10 @@
-package sample;
+package taskscheduller;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,16 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Servlet implementation class HelloServlet
+ * Servlet implementation class IndexServlet
  */
-@WebServlet("/HelloServlet")
-public class HelloServlet extends HttpServlet {
+@WebServlet("/register")
+public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public HelloServlet() {
+    public Register() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -28,31 +32,39 @@ public class HelloServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		String name = (String) request.getAttribute("userName");
-		
-		if (name == null || "".equals(name)) {
-			request.setAttribute("userName", "Guest");
-		}
-
-		String view = "/WEB-INF/view/index_old.jsp";
+		String view = "WEB-INF/view/index.jsp";
 		RequestDispatcher dispatcher = request.getRequestDispatcher(view);
 		dispatcher.forward(request, response);
 	}
-	
+
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 文字コードの設定
-		request.setCharacterEncoding("utf-8");
-		// formから値を取得
-		String name = request.getParameter("name");
+		request.setCharacterEncoding("UTF-8");
 		
-		// JSPの値を返す
-		request.setAttribute("userName", name);
+		Connection con = null;
+		Statement smt = null;
 		
-		doGet(request, response);
+		String url = "jdbc:mysql://localhost:3306/task_scheduller";
+		String user = "task_scheduller";
+		String pass = "task_scheduller";
+		
+		try {
+			con = DriverManager.getConnection(url,user,pass);
+			smt = con.createStatement();
+			System.out.println("smt:"+ smt);
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				con.close();
+			}catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 }
